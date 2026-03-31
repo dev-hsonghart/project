@@ -9,11 +9,9 @@ import { useContext, useState } from 'react';
 import { BookStoreThemeProvider, ThemeContext } from './context/themeContext';
 
 function App() {
-  const value = useContext(ThemeContext);
-
   return (
     <BookStoreThemeProvider>
-      <ThemeSwitcher themeName={value} setThemeName={() => {}} />
+      <ThemeSwitcher />
       <Layout>
         <Home />
       </Layout>
