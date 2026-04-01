@@ -8,6 +8,7 @@ interface ButtonProps {
   scheme: ButtonScheme;
   disabled?: boolean;
   isLoading?: boolean;
+  type?: string | 'submit';
 }
 
 const Button = ({

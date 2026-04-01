@@ -6,7 +6,6 @@ import Button from '../components/common/Button';
 import InputText from '../components/common/InputText';
 
 const Home = () => {
-  const COUNT = 10000;
   return (
     <>
       <Title size="large" color="primary">

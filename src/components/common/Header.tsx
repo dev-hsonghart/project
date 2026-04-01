@@ -1,33 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { styled } from 'styled-components';
 import logo from '../../assets/images/img_logo.jpg';
-
-const CATEGORY = [
-  {
-    id: null,
-    name: '전체',
-  },
-  { id: 1, name: '소설' },
-  { id: 2, name: '사회' },
-];
+import { Link } from 'react-router-dom';
+import { useCategory } from '../../hooks/useCategory';
 
 const Header = () => {
+  const category = useCategory();
+
   return (
     <HeaderStyle>
-      <img className="logo" src={logo} alt="Logo" />
+      <h1>
+        <Link to="/">
+          <img className="logo" src={logo} alt="Logo" />
+        </Link>
+      </h1>
       <nav className="category">
         <ul>
-          {CATEGORY.map((category) => (
-            <li key={category.id}>
-              <a
-                href={
-                  category.id === null
+          {category.map((item) => (
+            <li key={item.categoryId}>
+              <Link
+                to={
+                  item.categoryId === null
                     ? '/books'
-                    : `/books?category_id=${category.id}`
+                    : `/books?category_id=${item.categoryId}`
                 }
               >
-                {category.name}
-              </a>
+                {item.categoryName}
+              </Link>
             </li>
           ))}
         </ul>
