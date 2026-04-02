@@ -3,9 +3,11 @@ import { styled } from 'styled-components';
 import logo from '../../assets/images/img_logo.jpg';
 import { Link } from 'react-router-dom';
 import { useCategory } from '../../hooks/useCategory';
+import { useAuthStore } from '../../store/authStore';
 
 const Header = () => {
   const category = useCategory();
+  const { isLoggedIn, storeLogout } = useAuthStore();
 
   return (
     <HeaderStyle>
@@ -33,12 +35,26 @@ const Header = () => {
       </nav>
       <nav className="auth">
         <ul>
-          <li>
-            <a href="/login">로그인</a>
-          </li>
-          <li>
-            <a href="/signup">회원가입</a>
-          </li>
+          {isLoggedIn ? (
+            <>
+              <li>
+                <Link to="/cart">장바구니</Link>
+              </li>
+              <li>
+                <Link to="/orderlist">주문내역</Link>
+              </li>
+              <button onClick={storeLogout}>로그아웃</button>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link to="/login">로그인</Link>
+              </li>
+              <li>
+                <Link to="/signup">회원가입</Link>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
     </HeaderStyle>
@@ -87,7 +103,8 @@ const HeaderStyle = styled.header`
       display: flex;
       gap: 20px;
       li {
-        a {
+        a,
+        button {
           font-size: 1.5rem;
           font-weight: 600;
           text-decoration: none;
@@ -98,6 +115,10 @@ const HeaderStyle = styled.header`
           display: flex;
           align-items: center;
           line-height: 1;
+
+          border: 0;
+          background: none;
+          cursor: pointer;
         }
       }
     }

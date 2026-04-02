@@ -1,0 +1,62 @@
+import React from 'react';
+import { Pagination as IPagenation } from '../../models/pagination';
+import { LIMIT } from '../../contants/pagination';
+import Button from '../common/Button';
+import styled from 'styled-components';
+import { useSearchParams } from 'react-router-dom';
+
+interface Props {
+  pagination: IPagenation;
+}
+
+const Pagination = ({ pagination }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { totalCounts, currentPage } = pagination;
+  const pages: number = Math.ceil(totalCounts / LIMIT);
+
+  const handleClickPage = (page: number) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', page.toString());
+    setSearchParams(newSearchParams);
+  };
+
+  return (
+    <PaginationStyle>
+      {pages > 0 && (
+        <ol>
+          {Array(pages)
+            .fill(0)
+            .map((_, index) => (
+              <li>
+                <Button
+                  key={index}
+                  size="small"
+                  scheme={index + 1 === currentPage ? 'primary' : 'normal'}
+                  onClick={() => handleClickPage(index + 1)}
+                >
+                  {index + 1}
+                </Button>
+              </li>
+            ))}
+        </ol>
+      )}
+    </PaginationStyle>
+  );
+};
+
+const PaginationStyle = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 24px 0;
+
+  ol {
+    list-style: none;
+    display: flex;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+  }
+`;
+
+export default Pagination;

@@ -7,6 +7,7 @@ interface ButtonProps {
   size: ButtonSize;
   scheme: ButtonScheme;
   disabled?: boolean;
+  onClick?: () => void;
   isLoading?: boolean;
   type?: string | 'submit';
 }
@@ -17,6 +18,7 @@ const Button = ({
   scheme,
   disabled,
   isLoading,
+  onClick,
 }: ButtonProps) => {
   return (
     <ButtonStyle
@@ -24,6 +26,7 @@ const Button = ({
       scheme={scheme}
       disabled={disabled}
       isLoading={isLoading}
+      onClick={onClick}
     >
       {children}
     </ButtonStyle>
