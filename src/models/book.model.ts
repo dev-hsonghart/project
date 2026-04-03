@@ -18,4 +18,5 @@ export interface Book {
 export interface BookDetail extends Book {
   categoryName: string;
   likes: number;
+  liked: boolean;
 }

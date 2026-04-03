@@ -8,7 +8,7 @@ export type ColorKey =
   | 'border'
   | 'text';
 export type ButtonSize = 'large' | 'medium' | 'small';
-export type ButtonScheme = 'primary' | 'normal';
+export type ButtonScheme = 'primary' | 'normal' | 'like';
 export type LayoutWidth = 'large' | 'medium' | 'small';
 
 interface Theme {
@@ -66,6 +66,7 @@ export const light: Theme = {
   buttonScheme: {
     primary: { backgroundColor: 'coral', color: 'white' },
     normal: { backgroundColor: 'lightgray', color: 'black' },
+    like: { backgroundColor: 'coral', color: 'white' },
   },
   borderRadius: {
     default: '4px',
