@@ -11,7 +11,7 @@ interface FetchBooksParams {
 
 interface FetchBooksResponse {
   books: Book[];
-  pagination: Pagination;
+  pagination: { currentPage: number; totalCounts: number };
 }
 
 export const fetchBooks = async (params: FetchBooksParams) => {
@@ -19,6 +19,7 @@ export const fetchBooks = async (params: FetchBooksParams) => {
     const response = await httpClient.get<FetchBooksResponse>('/books', {
       params,
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.log(error);

@@ -30,9 +30,10 @@ export const useBooks = () => {
         : 1,
       limit: LIMIT,
     }).then(({ books, pagination }) => {
-      setBooks(books);
+      const bookList = books || [];
+      setBooks(bookList);
       setPagination(pagination);
-      setIsEmpty(books.length === 0);
+      setIsEmpty(bookList.length === 0);
     });
   }, [location.search]);
 
