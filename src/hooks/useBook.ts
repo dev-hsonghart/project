@@ -49,9 +49,9 @@ export const useBook = (bookId: string | undefined) => {
     }
   };
 
-  if (!book) return;
-
   const addTocart = (quantity: number) => {
+    if (!book) return;
+
     addCart({
       bookId: book.id,
       count: quantity,
@@ -61,7 +61,6 @@ export const useBook = (bookId: string | undefined) => {
         setCartAdded(false);
       }, 3000);
     });
-
-    return { book, likeToggle, addTocart, cartAdded };
   };
+  return { book, likeToggle, addTocart, cartAdded };
 };

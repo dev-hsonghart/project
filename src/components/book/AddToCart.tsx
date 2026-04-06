@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { BookDetail } from '../../models/book.model';
 import InputText from '../common/InputText';
 import Button from '../common/Button';
-import { addCart } from '../../api/carts.api';
 
 import { Link, Navigate } from 'react-router-dom';
 import { useBook } from '../../hooks/useBook';
@@ -14,8 +13,7 @@ interface Props {
 
 const AddTocart = ({ book }: Props) => {
   const [quantity, setQuantity] = React.useState(1);
-  const {addTocart, cartAdded} = useBook(book.id.toString());
-
+  const { addTocart, cartAdded } = useBook(String(book.id));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
@@ -31,35 +29,32 @@ const AddTocart = ({ book }: Props) => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
   };
 
-  
-
-    return (
-      <AddToCartStyle $added={cartAdded}>
-        <div>
-          <InputText
-            inputType="number"
-            value={quantity}
-            onChange={handleChange}
-          />
-          <Button size="medium" scheme="normal" onClick={handleIncrease}>
-            +
-          </Button>
-          <Button size="medium" scheme="normal" onClick={handleDecrease}>
-            -
-          </Button>
-        </div>
-        <Button size="medium" scheme="normal" onClick={() => addTocart(quantity)}>
-          장바구니 담기
+  return (
+    <AddToCartStyle $added={cartAdded}>
+      <div>
+        <InputText
+          inputType="number"
+          value={quantity}
+          onChange={handleChange}
+        />
+        <Button size="medium" scheme="normal" onClick={handleIncrease}>
+          +
         </Button>
-        {cartAdded && (
-          <div className="added">
-            <p>장바구니에 추가되었습니다.</p>
-            <Link to="/cart">장바구니로 이동</Link>
-          </div>
-        )}
-      </AddToCartStyle>
-    );
-  };
+        <Button size="medium" scheme="normal" onClick={handleDecrease}>
+          -
+        </Button>
+      </div>
+      <Button size="medium" scheme="normal" onClick={() => addTocart(quantity)}>
+        장바구니 담기
+      </Button>
+      {cartAdded && (
+        <div className="added">
+          <p>장바구니에 추가되었습니다.</p>
+          <Link to="/cart">장바구니로 이동</Link>
+        </div>
+      )}
+    </AddToCartStyle>
+  );
 };
 
 interface AddToCartStyleProps {

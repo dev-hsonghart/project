@@ -9,7 +9,7 @@ import { formatDate, formatNumber } from '../utils/formmat';
 import { QUERYSTRING } from '../contants/querystring';
 import EllipsisBox from '../components/common/EllipsisBox';
 import LikeButton from '../components/book/LikeButton';
-import AddToCart from '../components/book/AddTocart';
+import AddToCart from '../components/book/AddToCart';
 
 const bookInfoList = [
   {
