@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
-import { BookDetail } from '../models/book.model';
+import { BookDetail, BookReviewItem } from '../models/book.model';
 import { fetchBook, likeBook, unlikeBook } from '../api/books.api';
 import { useAuthStore } from '../store/authStore';
 import { showAlert } from '../utils/alerts';
 import { addCart } from '../api/carts.api';
+import { fetchBookReview } from '@/api/review.api';
+import { useToast } from './useToast';
 
 export const useBook = (bookId: string | undefined) => {
   const [book, setBook] = useState<BookDetail | null>(null);
   const { isLoggedIn } = useAuthStore();
   const [cartAdded, setCartAdded] = useState(false);
+  const [reviews, setReviews] = useState<BookReviewItem[]>([]);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!bookId) return;
@@ -18,13 +22,17 @@ export const useBook = (bookId: string | undefined) => {
         setBook(book);
       }
     });
+
+    fetchBookReview(Number(bookId)).then((reviews) => {
+      setReviews(reviews);
+    });
   }, [bookId]);
 
   const likeToggle = () => {
     // 권한 확인
 
     if (!isLoggedIn) {
-      showAlert('로그인이 필요한 기능입니다.');
+      showToast('로그인이 필요한 기능입니다.', 'error');
       return;
     }
 
@@ -57,10 +65,12 @@ export const useBook = (bookId: string | undefined) => {
       count: quantity,
     }).then((response) => {
       setCartAdded(true);
+      showToast('장바구니에 추가되었습니다.', 'info');
       setTimeout(() => {
         setCartAdded(false);
       }, 3000);
     });
   };
+
   return { book, likeToggle, addTocart, cartAdded };
 };

@@ -9,8 +9,10 @@ import { login, signup } from '../api/auth.api';
 import { SignupProps, SignupStyle } from './Signup';
 import { showAlert } from '../utils/alerts';
 import { useAuthStore } from '../store/authStore';
+import { useAuth } from '@/hooks/useAuth';
 
 const Login = () => {
+  const { userLogin } = useAuth();
   const navigate = useNavigate();
   const { isLoggedIn, storeLogin, storeLogout } = useAuthStore();
   useAuthStore();
@@ -22,17 +24,7 @@ const Login = () => {
   } = useForm<SignupProps>();
 
   const onSubmit = (data: SignupProps) => {
-    login(data)
-      .then((res) => {
-        // 상태변화
-        storeLogin(res.token);
-        // 로컬스토리지에 토큰 저장
-        showAlert('로그인이 완료되었습니다.');
-        navigate('/');
-      })
-      .catch((error) => {
-        showAlert('로그인에 실패했습니다');
-      });
+    userLogin(data);
   };
 
   return (
@@ -46,7 +38,7 @@ const Login = () => {
               inputType="email"
               placeholder="아이디를 입력하세요"
               {...register('email', { required: true })}
-              //   onChange={(e) => setEmail(e.target.value)}
+              inputMode="email"
             />
             {errors.email && <p className="error-text">이메일을 입력하세요.</p>}
           </fieldset>
@@ -56,7 +48,7 @@ const Login = () => {
               inputType="password"
               placeholder="비밀번호를 입력하세요"
               {...register('password', { required: true })}
-              //   onChange={(e) => setPassword(e.target.value)}
+              inputMode="text"
             />
             {errors.password && (
               <p className="error-text">비밀번호를 입력하세요.</p>

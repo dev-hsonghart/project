@@ -59,3 +59,19 @@ export const unlikeBook = async (bookId: number) => {
     console.log(error);
   }
 };
+
+export const fetchBestBooks = async () => {
+  try {
+    const response = await httpClient.get<Book[]>('/books/best');
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return {
+      books: [],
+      pagination: {
+        currentPage: 1,
+        totalCounts: 0,
+      },
+    };
+  }
+};

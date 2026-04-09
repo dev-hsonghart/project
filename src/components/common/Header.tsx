@@ -1,23 +1,31 @@
-import React, { useEffect } from 'react';
 import { styled } from 'styled-components';
 import logo from '../../assets/images/img_logo.jpg';
 import { Link } from 'react-router-dom';
 import { useCategory } from '../../hooks/useCategory';
 import { useAuthStore } from '../../store/authStore';
+import Dropdown from './Dropdown';
+import { useState } from 'react';
 
 const Header = () => {
   const category = useCategory();
   const { isLoggedIn, storeLogout } = useAuthStore();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <HeaderStyle>
+    <HeaderStyle $isMobileOpen={isMobileOpen}>
       <h1>
         <Link to="/">
           <img className="logo" src={logo} alt="Logo" />
         </Link>
       </h1>
       <nav className="category">
-        <ul>
+        <button
+          className="menu-button"
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+        >
+          메뉴
+        </button>
+        <ul style={{ right: isMobileOpen ? '0' : '-100%' }}>
           {category.map((item) => (
             <li key={item.categoryId}>
               <Link
@@ -34,34 +42,40 @@ const Header = () => {
         </ul>
       </nav>
       <nav className="auth">
-        <ul>
-          {isLoggedIn ? (
-            <>
-              <li>
-                <Link to="/cart">장바구니</Link>
-              </li>
-              <li>
-                <Link to="/orderlist">주문내역</Link>
-              </li>
-              <button onClick={storeLogout}>로그아웃</button>
-            </>
-          ) : (
-            <>
-              <li>
-                <Link to="/login">로그인</Link>
-              </li>
-              <li>
-                <Link to="/signup">회원가입</Link>
-              </li>
-            </>
-          )}
-        </ul>
+        <Dropdown toggleButton={<span>메뉴</span>}>
+          <>
+            {isLoggedIn ? (
+              <ul>
+                <li>
+                  <Link to="/cart">장바구니</Link>
+                </li>
+                <li>
+                  <Link to="/orderlist">주문내역</Link>
+                </li>
+                <button onClick={storeLogout}>로그아웃</button>
+              </ul>
+            ) : (
+              <ul>
+                <li>
+                  <Link to="/login">로그인</Link>
+                </li>
+                <li>
+                  <Link to="/signup">회원가입</Link>
+                </li>
+              </ul>
+            )}
+          </>
+        </Dropdown>
       </nav>
     </HeaderStyle>
   );
 };
 
-const HeaderStyle = styled.header`
+interface HeaderStyleProps {
+  $isMobileOpen: boolean;
+}
+
+const HeaderStyle = styled.header<HeaderStyleProps>`
   width: 100%;
   margin: 0 auto;
   max-width: ${({ theme }) => theme.layout.width.large};
@@ -81,6 +95,9 @@ const HeaderStyle = styled.header`
   }
 
   .category {
+    .menu-button {
+      display: none;
+    }
     ul {
       display: flex;
       gap: 20px;
@@ -101,7 +118,9 @@ const HeaderStyle = styled.header`
   .auth {
     ul {
       display: flex;
+      flex-direction: column;
       gap: 20px;
+      width: 100px;
       li {
         a,
         button {
@@ -119,7 +138,61 @@ const HeaderStyle = styled.header`
           border: 0;
           background: none;
           cursor: pointer;
+
+          justify-content: center;
+          width: 100%;
         }
+      }
+    }
+  }
+
+  @media screen AND ${({ theme }) => theme.mediaQuery.mobile} {
+    height: 52px;
+
+    .logo {
+      padding: 0 0 0 12px;
+    }
+
+    img {
+      width: 140px;
+    }
+
+    .auth {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+
+    .category {
+      position: absolute;
+      top: 12px;
+      right: 56px;
+
+      .menu-button {
+        display: flex;
+        position: absolute;
+        top: 12px;
+        right: ${({ $isMobileOpen }) => ($isMobileOpen ? '62%' : '-52px')};
+        background: #fff;
+        border: 0;
+        font-size: 1.5rem;
+      }
+      ul {
+        position: fixed;
+        top: 0;
+        right: ${({ $isMobileOpen }) => ($isMobileOpen ? '0' : '-100%')};
+        width: 60%;
+        height: 100vh;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease-in-out;
+
+        margin: 0;
+        padding: 24px;
+        z-index: 1000;
+
+        flex-direction: column;
+        gap: 16px;
       }
     }
   }

@@ -5,37 +5,42 @@ import { Pagination } from '../models/pagination';
 import { QUERYSTRING } from '../contants/querystring';
 import { fetchBooks } from '../api/books.api';
 import { LIMIT } from '../contants/pagination';
+import { useQuery } from 'react-query';
 
 export const useBooks = () => {
   const location = useLocation();
+  const { data: booksData, isLoading: isBooksLoading } = useQuery(
+    ['books', location.search],
+    () => {
+      const params = new URLSearchParams(location.search);
+      return fetchBooks({
+        categoryId: params.get(QUERYSTRING.CATEGORY_ID)
+          ? Number(params.get(QUERYSTRING.CATEGORY_ID))
+          : undefined,
+        newBooks: params.get(QUERYSTRING.NEWS) ? true : undefined,
+        currentPage: params.get(QUERYSTRING.PAGE)
+          ? Number(params.get(QUERYSTRING.PAGE))
+          : 1,
+        limit: LIMIT,
+      });
+    },
+  );
 
-  const [books, setBooks] = useState<Book[]>([]);
-  const [pagination, setPagination] = useState<Pagination>({
-    currentPage: 1,
-    totalCounts: 0,
-  });
+  // useEffect(() => {
+  //   const params = new URLSearchParams(location.search);
 
-  const [isEmpty, setIsEmpty] = useState(true);
+  //   .then(({ books, pagination }) => {
+  //     const bookList = books || [];
+  //     setBooks(bookList);
+  //     setPagination(pagination);
+  //     setIsEmpty(bookList.length === 0);
+  //   });
+  // }, [location.search]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-
-    fetchBooks({
-      categoryId: params.get(QUERYSTRING.CATEGORY_ID)
-        ? Number(params.get(QUERYSTRING.CATEGORY_ID))
-        : undefined,
-      newBooks: params.get(QUERYSTRING.NEWS) ? true : undefined,
-      currentPage: params.get(QUERYSTRING.PAGE)
-        ? Number(params.get(QUERYSTRING.PAGE))
-        : 1,
-      limit: LIMIT,
-    }).then(({ books, pagination }) => {
-      const bookList = books || [];
-      setBooks(bookList);
-      setPagination(pagination);
-      setIsEmpty(bookList.length === 0);
-    });
-  }, [location.search]);
-
-  return { books, pagination, isEmpty };
+  return {
+    books: booksData?.books || [],
+    pagination: booksData?.pagination,
+    isEmpty: booksData ? booksData.books.length === 0 : false,
+    isBooksLoading,
+  };
 };

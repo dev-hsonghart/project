@@ -5,7 +5,7 @@ import InputText from '../components/common/InputText';
 import Button from '../components/common/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { signup } from '../api/auth.api';
+import { useAuth } from '@/hooks/useAuth';
 
 export interface SignupProps {
   email: string;
@@ -14,7 +14,7 @@ export interface SignupProps {
 }
 
 const Signup = () => {
-  const navigate = useNavigate();
+  const { userSignup } = useAuth();
 
   const {
     register,
@@ -23,10 +23,7 @@ const Signup = () => {
   } = useForm<SignupProps>();
 
   const onSubmit = (data: SignupProps) => {
-    signup(data).then((res) => {
-      window.alert('회원가입이 완료되었다');
-      navigate('/login');
-    });
+    userSignup(data);
   };
 
   return (

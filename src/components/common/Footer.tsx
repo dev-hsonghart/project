@@ -21,6 +21,11 @@ const FooterStyle = styled.footer`
   textalign: 'center';
   display: flex;
   justify-content: space-between;
+
+  @media screen and (max-width: ${({ theme }) => theme.mediaQuery.mobile}) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export default Footer;

@@ -35,7 +35,7 @@ const BookItem: React.FC<Props> = ({ book, view = 'grid' }) => {
   );
 };
 
-const BookItemStyle = styled.div<Pick<Props, 'view'>>`
+export const BookItemStyle = styled.div<Pick<Props, 'view'>>`
   a {
     display: flex;
     flex-direction: column;

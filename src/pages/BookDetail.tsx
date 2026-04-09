@@ -10,6 +10,10 @@ import { QUERYSTRING } from '../contants/querystring';
 import EllipsisBox from '../components/common/EllipsisBox';
 import LikeButton from '../components/book/LikeButton';
 import AddToCart from '../components/book/AddToCart';
+import BookReivew from '@/components/books/BookReivew';
+import { Tabs, Tab } from '@/components/common/Tabs';
+import Modal from '@/components/common/Modal';
+import { set } from 'react-hook-form';
 
 const bookInfoList = [
   {
@@ -49,7 +53,9 @@ const bookInfoList = [
 
 const BookDetail = () => {
   const { bookId } = useParams();
-  const { book, likeToggle } = useBook(bookId);
+  const { book, likeToggle, reviews } = useBook(bookId);
+
+  const [isImgModalOpen, setIsImgModalOpen] = React.useState(false);
 
   if (!book) {
     return <BookDetailStyle>북을 불러오는 중...</BookDetailStyle>;
@@ -59,7 +65,17 @@ const BookDetail = () => {
     <BookDetailStyle>
       <header className="header">
         <div className="ijg">
-          <img src={getImgSrc(book.imgUrl)} alt={book.title} />
+          <img
+            src={getImgSrc(book.imgUrl)}
+            alt={book.title}
+            onClick={() => setIsImgModalOpen(true)}
+          />
+          <Modal
+            isOpen={isImgModalOpen}
+            onClose={() => setIsImgModalOpen(false)}
+          >
+            <img src={getImgSrc(book.imgUrl)} alt={book.title} />
+          </Modal>
         </div>
         <div className="info">
           <Title size="large" color="text">
@@ -95,10 +111,20 @@ const BookDetail = () => {
         </div>
       </header>
       <div className="content">
-        <Title size="medium">상세 설명</Title>
-        <EllipsisBox lineLimit={4}>{book.detail}</EllipsisBox>
-        <Title size="medium">목차</Title>
-        <p className="index">{book.contents}</p>
+        <Tabs>
+          <Tab title="상세 설명">
+            <Title size="medium">상세 설명</Title>
+            <EllipsisBox lineLimit={4}>{book.detail}</EllipsisBox>
+          </Tab>
+          <Tab title="목차">
+            <Title size="medium">목차</Title>
+            <p className="index">{book.contents}</p>
+          </Tab>
+          <Tab title="리뷰">
+            <Title size="medium">리뷰</Title>
+            <BookReivew reivews={reviews} />
+          </Tab>
+        </Tabs>
       </div>
     </BookDetailStyle>
   );
